@@ -1,6 +1,4 @@
 import tkinter as tk
-from tkinter import *
-import tkinter as tk2
 from PIL import Image, ImageTk
 import random
 import time
@@ -11,16 +9,19 @@ import winsound
 from objects import *
 
 
+def update_game(main_window):
+    pass
 
-def main():
-    tk = Tk()
-    tk.title("Monkey: Primer Proyecto Programado")
-    tk.resizable(False, False) # No se puede cambiar el tamaño de la ventana
-    tk.wm_attributes("-topmost", 1) #Poner esta ventana enfrente de todas las demas 
-    canvas = Canvas(tk, width=1000, height=700, borderwidth =0, highlightthickness=0, bg = "#000000")
-    canvas.pack()
-    tk.update()
-
+def run_game():
+    game_window = tk.Tk()
+    game_window.title("Monkey: Primer Proyecto Programado")
+    game_window.resizable(False, False) # No se puede cambiar el tamaño de la ventana
+    game_window.wm_attributes("-topmost", 1) #Poner esta ventana enfrente de todas las demas 
+    game_canvas = tk.Canvas(game_window, width=1000, height=700, borderwidth =0, highlightthickness=0, bg = "#000000")
+    game_canvas.pack()
+    
+    imagen_escalera = tk.PhotoImage(file="escalera.png")
+    game_canvas.create_image(250,580, image=imagen_escalera) 
 
     rojoNaranja = "#FF4500"
     cian = "#00FFFF"
@@ -29,22 +30,22 @@ def main():
     white = "#FFFFFF"
     black = "#000000"
 
-    
+    paddle_list = [
+        Paddle(game_canvas, 0, 640, 1000, 650, rojoNaranja),
+        Paddle(game_canvas, 100, 510, 1000, 520, rojoNaranja),
+        Paddle(game_canvas, 0, 380, 900, 390, rojoNaranja),
+        Paddle(game_canvas, 100, 250, 1000, 260, rojoNaranja),
+        Paddle(game_canvas, 0, 120, 900, 130, rojoNaranja)
+    ]
             
-    paddle1 = Paddle(canvas, 0, 640, 1000, 650, rojoNaranja)
-    paddle2 = Paddle(canvas, 100, 510, 1000, 520, rojoNaranja)
-    paddle3 = Paddle(canvas, 0, 380, 900, 390, rojoNaranja)
-    paddle4 = Paddle(canvas, 100, 250, 1000, 260, rojoNaranja)
-    paddle5 = Paddle(canvas, 0, 120, 900, 130, rojoNaranja)
-    paddle6 = Paddle(canvas, 200, 640, 300, 520, cian)
-    mario = Mario(200, 640, canvas, paddle1, paddle2, paddle3, paddle4, paddle5, white)
+    
+    mario = Mario(game_canvas, paddle_list, white)
+
+    update_game(game_canvas)
 
 
+    tk.mainloop()
 
-    while 1:
-        mario.draw()
-        tk.update_idletasks()
-        tk.update()
-        time.sleep(0.01)
-
-main()
+        
+if __name__ == "__main__":
+    run_game()
