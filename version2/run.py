@@ -18,24 +18,27 @@ def run_game():
     game_window = tk.Tk()
     game_window.title("Monkey: Primer Proyecto Programado")
     game_window.resizable(False, False) # No se puede cambiar el tamaño de la ventana
-    
-    game_window.wm_attributes("-topmost", 1) #Poner esta ventana enfrente de todas las demas 
+    game_window.focus_force()
+    #game_window.wm_attributes("-topmost", 1) #Poner esta ventana enfrente de todas las demas 
     game_canvas = tk.Canvas(game_window, width=1000, height=700, borderwidth =0, highlightthickness=0, bg = "#000000")
     game_canvas.pack()
     
     imagen_escalera = tk.PhotoImage(file="escalera.png")
     imagen_monkey = tk.PhotoImage(file="monkey1.png")
+    imagen_princesa = tk.PhotoImage(file="princesa.png")
+
+    game_canvas.create_image(100,70, image=imagen_monkey)
+    game_canvas.create_image(200,70, image=imagen_princesa)
+
 
     escalera_list = [
         game_canvas.create_image(250,580, image=imagen_escalera),
         game_canvas.create_image(800,450, image=imagen_escalera) ,
         game_canvas.create_image(400,320, image=imagen_escalera) ,
-        game_canvas.create_image(650,190, image=imagen_escalera) ,
-        game_canvas.create_image(100,70, image=imagen_monkey)        
+        game_canvas.create_image(650,190, image=imagen_escalera)        
     ]
-
     paddle_list = [
-        
+
         Paddle(game_canvas, 0, 640, 1000, 650, rojoNaranja),
         Paddle(game_canvas, 100, 510, 1000, 520, rojoNaranja),
         Paddle(game_canvas, 0, 380, 900, 390, rojoNaranja),
@@ -43,9 +46,10 @@ def run_game():
         Paddle(game_canvas, 0, 120, 900, 130, rojoNaranja)
     ]
 
-    fruit_list = [
-        Fruit(game_canvas, 130, 90, 150, 110, "#FFFF00")
-     ]       
+    
+    b1 = Barrel(game_canvas, 130, 90, 150, 110, "#FFFF00")
+    b1.move_barrel(paddle_list, -1)
+    
     mario = Mario(game_canvas, escalera_list, paddle_list, white)
     
     

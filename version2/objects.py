@@ -1,6 +1,6 @@
 import time
 import tkinter as tk
-
+from constants import *
 
 class Paddle:
     def __init__(self, canvas, x1, y1, x2, y2, color):
@@ -13,15 +13,50 @@ class Paddle:
         self.color = color
 
 
-class Fruit:
+class Barrel:
     def __init__(self, canvas, x1, y1, x2, y2, color):
         self.canvas = canvas
-        self.id = canvas.create_oval(x1, y1, x2, y2, fill = color)
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
+        self.id = canvas.create_oval(x1, y1, x2, y2, fill = white)
         self.color = color
+
+    
+        
+    def move_barrel(self, paddle_list, i):
+        barrel_x1, barrel_y1, barrel_x2, barrel_y2 = self.canvas.coords(self.id)
+        distance = 10
+        delta_time = 10
+
+        menos_i = i * - 1
+        if (len(paddle_list) == menos_i) and \
+            ((barrel_x1 < 0) or (barrel_x2 > 1000) or (barrel_y1 < 0) or (barrel_y2 > 700)):
+            self.canvas.move(self.id, 130 - barrel_x1, 90- barrel_y1)
+            self.canvas.after(delta_time, self.move_barrel, paddle_list, -1)
+
+        else:
+
+            if  menos_i % 2 == 0:
+                if barrel_x1 <= 0:
+                    self.canvas.move(self.id, 0, distance)
+                else:
+                    self.canvas.move(self.id, -distance, 0)
+            else:
+                if barrel_x2 >= 1000:
+                    self.canvas.move(self.id, 0, distance)
+                else:
+                    self.canvas.move(self.id, distance, 0)
+
+            barrel_x1, barrel_y1, barrel_x2, barrel_y2 = self.canvas.coords(self.id)
+            if (len(paddle_list) != menos_i) and (barrel_y2 >= paddle_list[i-1].y1):
+                i = i - 1
+            self.canvas.after(delta_time, self.move_barrel, paddle_list, i)
+        
+
+
+
+
+        
+        
+
 
 
 
@@ -41,40 +76,7 @@ class Mario:
         self.canvas.bind_all("<KeyPress-Down>", self.turn_down)
         self.canvas.bind_all('<Return>', self.enter)
         
-    def draw(self):
-        
-        if self.is_jumping: # Para saltar sobre las frutas, hay que agregarle algun "delay"
-            step = 5
-            limit = 120
-
-            pos = self.canvas.coords(self.id)
-            if 0 <= pos[2] <= 100: 
-                while step <= limit:
-                    self.canvas.move(self.id, self.x + 1, step)
-                    step += 5
-                    
-                    print(step)
-                while step >= 5:
-                    self.canvas.move(self.id, self.x + 1, -step)
-                    step -= 5
-                    print(step)
-                self.is_jumping = False
-            if 900 <= pos[0] <= 1000: 
-                while step <= limit:
-                    self.canvas.move(self.id, self.x - 1, step)
-                    step += 5
-                    
-                    print(step)
-                while step >= 5:
-                    self.canvas.move(self.id, self.x - 1, -step)
-                    step -= 5
-                    print(step)
-                self.is_jumping = False
-        #self.canvas.move(self.id, self.x, self.y)
-
-        pos = self.canvas.coords(self.id)
-        #print(pos)
-
+   
 
     def turn_left(self, evt):
         if not self.en_escalera:
@@ -211,6 +213,3 @@ class Mario:
 
 
 
-
-if __name__ == "__main__":
-    print("Please execute: run.py")
