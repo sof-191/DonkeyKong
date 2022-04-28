@@ -2,6 +2,7 @@ from concurrent.futures.process import _ThreadWakeup
 import time
 import tkinter as tk
 from constants import *
+import random
 
 class Paddle:
 
@@ -25,8 +26,24 @@ class Barrel:
         self.canvas = canvas
         self.id = canvas.create_oval(x1, y1, x2, y2, fill = white)
         self.color = color
+        self.moving = False
 
-    
+    def start_barrels(canvas, barrel_list, paddle_list, i):
+        delta_time = 1000
+        chance_to_throw = 0.333
+        if i >= len(barrel_list):
+            canvas.after(delta_time, Barrel.start_barrels, canvas, barrel_list, paddle_list, 0)
+        else: 
+            if (barrel_list[i].moving):
+                canvas.after(delta_time, Barrel.start_barrels, canvas, barrel_list, paddle_list, i + 1)
+            else:
+                if (random.random() < chance_to_throw):
+                    barrel_list[i].moving = True
+                    barrel_list[i].move_barrel(paddle_list, -1)
+                    canvas.after(delta_time, Barrel.start_barrels, canvas, barrel_list, paddle_list, i + 1)
+                else:
+                    canvas.after(delta_time, Barrel.start_barrels, canvas, barrel_list,paddle_list, i)
+
         
     def move_barrel(self, paddle_list, i):
         barrel_x1, barrel_y1, barrel_x2, barrel_y2 = self.canvas.coords(self.id)
@@ -37,8 +54,9 @@ class Barrel:
         if (len(paddle_list) == menos_i) and \
             ((barrel_x1 < 0) or (barrel_x2 > 1000) or (barrel_y1 < 0) or (barrel_y2 > 700)):
             self.canvas.move(self.id, 130 - barrel_x1, 90- barrel_y1)
-            self.canvas.after(delta_time, self.move_barrel, paddle_list, -1)
-
+           # self.canvas.after(delta_time, self.move_barrel, paddle_list, -1)
+            self.moving = False
+            
         else:
 
             if  menos_i % 2 == 0:

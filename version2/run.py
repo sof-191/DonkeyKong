@@ -73,10 +73,18 @@ def run_game(nivel):
 
     
     
+    barrel_list = [
 
+        Barrel(game_canvas, 130, 90, 150, 110, "#FFFF00"),
+        Barrel(game_canvas, 130, 90, 150, 110, "#FFFF00"),
+        Barrel(game_canvas, 130, 90, 150, 110, "#FFFF00"),
+        Barrel(game_canvas, 130, 90, 150, 110, "#FFFF00"),
+        Barrel(game_canvas, 130, 90, 150, 110, "#FFFF00")
+    ]
     
-    b1 = Barrel(game_canvas, 130, 90, 150, 110, "#FFFF00")
-    b1.move_barrel(paddle_list, -1)
+    Barrel.start_barrels(game_canvas, barrel_list, paddle_list, 0)
+    
+    # b1.move_barrel(paddle_list, -1)
     
     mario = Mario(game_canvas, escalera_list, paddle_list, white)
     
