@@ -1,16 +1,23 @@
+from concurrent.futures.process import _ThreadWakeup
 import time
 import tkinter as tk
 from constants import *
 
 class Paddle:
-    def __init__(self, canvas, x1, y1, x2, y2, color):
+
+
+    def __init__(self, canvas, x1, y1, x2, y2, imagen900, imagen1000):
         self.canvas = canvas
-        self.id = canvas.create_rectangle(x1, y1, x2, y2, fill = color)
+        if (x2-x1) == 1000:
+            self.img = canvas.create_image((x2+x1)//2, (y2+y1)//2, image=imagen1000)
+        else:
+            self.img = canvas.create_image((x2+x1)//2, (y2+y1)//2, image=imagen900)
+            
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
         self.y2 = y2
-        self.color = color
+        
 
 
 class Barrel:
@@ -103,25 +110,43 @@ class Mario:
                 if mario_x2 > paddle_x2:
                     self.canvas.move(self.id, paddle_x2 - mario_x2, 0)
 
+
+    def i_am_in_a_stair(self, i, going_up):
+        if i >= len(self.escaleras_list):
+            return False
+        
+        STAIR_WIDTH = 100
+        STAIR_HEIGHT = 120
+
+        STAIR_WIDTH_HALF = STAIR_WIDTH // 2
+        STAIR_HEIGHT_HALF = STAIR_HEIGHT // 2
+
+        mario_x1, mario_y1, mario_x2, mario_y2 = self.canvas.coords(self.id)
+        
+        MARIO_HEIGHT = (mario_y2 - mario_y1)
+
+        escalera_x, escalera_y = self.canvas.coords(self.escaleras_list[i])
+        escalera_x1, escalera_y1, escalera_x2, escalera_y2 =                 \
+            escalera_x - STAIR_WIDTH_HALF, escalera_y - STAIR_HEIGHT_HALF - MARIO_HEIGHT,   \
+            escalera_x + STAIR_WIDTH_HALF, escalera_y + STAIR_HEIGHT_HALF
+
+        if not going_up:
+            escalera_y1 -= 10
+            escalera_y2 -= 10
+
+        if (mario_x1 >= escalera_x1) and (mario_x2 <= escalera_x2) and \
+             (mario_y1 >= escalera_y1) and (mario_y2 <= escalera_y2):
+            return True
+
+        else:
+            return self.i_am_in_a_stair(i + 1, going_up)
+
+
+
     def turn_up(self, evt):
         pos = self.canvas.coords(self.id)
-        if 260 >= pos[0] >= 200 and 640 >= pos[1] >= 480: 
-            self.canvas.move(self.id, 0, -10)
-            self.en_escalera = True
 
-        elif 810 >= pos[0] >= 750 and 520 >= pos[1] >= 350:
-            self.canvas.move(self.id, 0, -10)
-            self.en_escalera = True
-
-        elif 410 >= pos[0] >= 350 and 390 >= pos[1] >= 220:
-            self.canvas.move(self.id, 0, -10)
-            self.en_escalera = True
-
-        elif 660 >= pos[0] >= 600 and 260 >= pos[1] >= 90:
-            self.canvas.move(self.id, 0, -10)
-            self.en_escalera = True
-
-        elif 100 >= pos[0] >= 50 and 0 >= pos[1] >= 120:
+        if self.i_am_in_a_stair(0, True):
             self.canvas.move(self.id, 0, -10)
             self.en_escalera = True
 
@@ -154,23 +179,7 @@ class Mario:
 
     def turn_down(self, evt):
         pos = self.canvas.coords(self.id)
-        if 260 >= pos[0] >= 200 and 640 > pos[3] >= 480: 
-            self.canvas.move(self.id, 0, 10)
-            self.en_escalera = True
-
-        elif 810 >= pos[0] >= 750 and 520 > pos[3] >= 350:
-            self.canvas.move(self.id, 0, 10)
-            self.en_escalera = True
-
-        elif 410 >= pos[0] >= 350 and 390 > pos[3] >= 220:
-            self.canvas.move(self.id, 0, 10)
-            self.en_escalera = True
-
-        elif 660 >= pos[0] >= 600 and 260 > pos[3] >= 90:
-            self.canvas.move(self.id, 0, 10)
-            self.en_escalera = True
-
-        elif 100 >= pos[0] >= 50 and 0 > pos[3] >= 120:
+        if self.i_am_in_a_stair(0, False):
             self.canvas.move(self.id, 0, 10)
             self.en_escalera = True
         

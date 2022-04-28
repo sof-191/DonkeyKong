@@ -14,7 +14,7 @@ from splash_animado_listo import *
 def update_game(main_window):
     pass
 
-def run_game():
+def run_game(nivel):
     game_window = tk.Tk()
     game_window.title("Monkey: Primer Proyecto Programado")
     game_window.resizable(False, False) # No se puede cambiar el tamaño de la ventana
@@ -31,20 +31,48 @@ def run_game():
     game_canvas.create_image(200,70, image=imagen_princesa)
 
 
-    escalera_list = [
-        game_canvas.create_image(250,580, image=imagen_escalera),
-        game_canvas.create_image(800,450, image=imagen_escalera) ,
-        game_canvas.create_image(400,320, image=imagen_escalera) ,
-        game_canvas.create_image(650,190, image=imagen_escalera)        
-    ]
-    paddle_list = [
+    paddle_img900 = tk.PhotoImage(file="BarraMario900.png")
+    paddle_img1000 = tk.PhotoImage(file="BarraMario1000.png")
+    
 
-        Paddle(game_canvas, 0, 640, 1000, 650, rojoNaranja),
-        Paddle(game_canvas, 100, 510, 1000, 520, rojoNaranja),
-        Paddle(game_canvas, 0, 380, 900, 390, rojoNaranja),
-        Paddle(game_canvas, 100, 250, 1000, 260, rojoNaranja),
-        Paddle(game_canvas, 0, 120, 900, 130, rojoNaranja)
-    ]
+    
+    if nivel == 1:
+        paddle_list = [
+            Paddle(game_canvas, 0, 640, 1000, 650, paddle_img900, paddle_img1000),
+            Paddle(game_canvas, 100, 510, 1000, 520, paddle_img900, paddle_img1000),
+            Paddle(game_canvas, 0, 380, 900, 390, paddle_img900, paddle_img1000),
+            Paddle(game_canvas, 100, 250, 1000, 260, paddle_img900, paddle_img1000),
+            Paddle(game_canvas, 0, 120, 900, 130, paddle_img900, paddle_img1000)
+        ]
+
+        escalera_list = [
+            game_canvas.create_image(250,580, image=imagen_escalera),
+            game_canvas.create_image(800,450, image=imagen_escalera) ,
+            game_canvas.create_image(400,320, image=imagen_escalera) ,
+            game_canvas.create_image(650,190, image=imagen_escalera)        
+        ]
+
+    if nivel == 2:
+        paddle_list = [
+            Paddle(game_canvas, 0, 641, 1000, 651, paddle_img900, paddle_img1000),
+            Paddle(game_canvas, 100, 548, 1000, 558, paddle_img900, paddle_img1000),
+            Paddle(game_canvas, 0, 455, 1000, 465, paddle_img900, paddle_img1000),
+            Paddle(game_canvas, 100, 362, 1000, 372, paddle_img900, paddle_img1000),
+            Paddle(game_canvas, 0, 269, 900, 279, paddle_img900, paddle_img1000),
+            Paddle(game_canvas, 100, 176, 1000, 186, paddle_img900, paddle_img1000),
+            Paddle(game_canvas, 0, 120, 900, 130, paddle_img900, paddle_img1000)
+        ]
+
+        escalera_list = [
+            game_canvas.create_image(250,580, image=imagen_escalera),
+            game_canvas.create_image(800,450, image=imagen_escalera) ,
+            game_canvas.create_image(400,320, image=imagen_escalera) ,
+            game_canvas.create_image(650,190, image=imagen_escalera)        
+        ]
+
+
+    
+    
 
     
     b1 = Barrel(game_canvas, 130, 90, 150, 110, "#FFFF00")
@@ -60,6 +88,6 @@ def run_game():
         
 if __name__ == "__main__":
     splash_animation()
-    run_game()
+    run_game(1)
 
 
