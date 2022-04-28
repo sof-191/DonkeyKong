@@ -7,14 +7,17 @@ import math
 import random
 import winsound
 from objects import *
+import constants
 from constants import *
 from threading import Thread
 from splash_animado_listo import *
+
 
 def update_game(main_window):
     pass
 
 def run_game(nivel):
+    
     game_window = tk.Tk()
     game_window.title("Monkey: Primer Proyecto Programado")
     game_window.resizable(False, False) # No se puede cambiar el tamaño de la ventana
@@ -34,8 +37,10 @@ def run_game(nivel):
     paddle_img900 = tk.PhotoImage(file="BarraMario900.png")
     paddle_img1000 = tk.PhotoImage(file="BarraMario1000.png")
     
+    constants.score_det = Label(game_canvas, text = "Score = 0", font = ("Haettenschweiler", 20), bg="#000000", fg=white)
+    constants.score_det.place(x = 870, y = 10)
 
-    
+
     if nivel == 1:
         paddle_list = [
             Paddle(game_canvas, 0, 640, 1000, 650, paddle_img900, paddle_img1000),

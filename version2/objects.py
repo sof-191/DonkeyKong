@@ -2,7 +2,10 @@ from concurrent.futures.process import _ThreadWakeup
 import time
 import tkinter as tk
 from constants import *
+import constants
 import random
+
+
 
 class Paddle:
 
@@ -46,6 +49,7 @@ class Barrel:
 
         
     def move_barrel(self, paddle_list, i):
+        
         barrel_x1, barrel_y1, barrel_x2, barrel_y2 = self.canvas.coords(self.id)
         distance = 10
         delta_time = 10
@@ -56,6 +60,8 @@ class Barrel:
             self.canvas.move(self.id, 130 - barrel_x1, 90- barrel_y1)
            # self.canvas.after(delta_time, self.move_barrel, paddle_list, -1)
             self.moving = False
+            constants.score += constants.score_gain
+            constants.score_det.configure(text= ("Score = " + str(constants.score)) )
             
         else:
 
