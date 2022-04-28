@@ -13,8 +13,12 @@ from threading import Thread
 from splash_animado_listo import *
 
 
-def update_game(main_window):
-    pass
+def check_lost(game_window):
+    if constants.lose == True:
+        game_window.destroy()
+    else:
+         game_window.after(30, check_lost, game_window)
+
 
 def run_game(nivel):
     
@@ -76,6 +80,7 @@ def run_game(nivel):
         ]
 
 
+    mario = Mario(game_canvas, escalera_list, paddle_list, white)
     
     
     barrel_list = [
@@ -87,14 +92,15 @@ def run_game(nivel):
         Barrel(game_canvas, 130, 90, 150, 110, "#FFFF00")
     ]
     
-    Barrel.start_barrels(game_canvas, barrel_list, paddle_list, 0)
+    Barrel.start_barrels(game_canvas, barrel_list, paddle_list, 0, mario)
     
     # b1.move_barrel(paddle_list, -1)
     
-    mario = Mario(game_canvas, escalera_list, paddle_list, white)
     
-    
-    update_game(game_canvas)
+
+        
+
+    check_lost(game_window)
     tk.mainloop()
     
 

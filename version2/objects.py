@@ -31,24 +31,24 @@ class Barrel:
         self.color = color
         self.moving = False
 
-    def start_barrels(canvas, barrel_list, paddle_list, i):
+    def start_barrels(canvas, barrel_list, paddle_list, i, mario):
         delta_time = 1000
         chance_to_throw = 0.333
         if i >= len(barrel_list):
-            canvas.after(delta_time, Barrel.start_barrels, canvas, barrel_list, paddle_list, 0)
+            canvas.after(delta_time, Barrel.start_barrels, canvas, barrel_list, paddle_list, 0, mario)
         else: 
             if (barrel_list[i].moving):
-                canvas.after(delta_time, Barrel.start_barrels, canvas, barrel_list, paddle_list, i + 1)
+                canvas.after(delta_time, Barrel.start_barrels, canvas, barrel_list, paddle_list, i + 1, mario)
             else:
                 if (random.random() < chance_to_throw):
                     barrel_list[i].moving = True
-                    barrel_list[i].move_barrel(paddle_list, -1)
-                    canvas.after(delta_time, Barrel.start_barrels, canvas, barrel_list, paddle_list, i + 1)
+                    barrel_list[i].move_barrel(paddle_list, -1, mario)
+                    canvas.after(delta_time, Barrel.start_barrels, canvas, barrel_list, paddle_list, i + 1, mario)
                 else:
-                    canvas.after(delta_time, Barrel.start_barrels, canvas, barrel_list,paddle_list, i)
-
+                    canvas.after(delta_time, Barrel.start_barrels, canvas, barrel_list,paddle_list, i, mario)
+    
         
-    def move_barrel(self, paddle_list, i):
+    def move_barrel(self, paddle_list, i, mario):
         
         barrel_x1, barrel_y1, barrel_x2, barrel_y2 = self.canvas.coords(self.id)
         distance = 10
@@ -58,7 +58,7 @@ class Barrel:
         if (len(paddle_list) == menos_i) and \
             ((barrel_x1 < 0) or (barrel_x2 > 1000) or (barrel_y1 < 0) or (barrel_y2 > 700)):
             self.canvas.move(self.id, 130 - barrel_x1, 90- barrel_y1)
-           # self.canvas.after(delta_time, self.move_barrel, paddle_list, -1)
+           # self.canvas.after(delta_time, self.move_barrel, paddle_list, -1, mario)
             self.moving = False
             constants.score += constants.score_gain
             constants.score_det.configure(text= ("Score = " + str(constants.score)) )
@@ -77,19 +77,21 @@ class Barrel:
                     self.canvas.move(self.id, distance, 0)
 
             barrel_x1, barrel_y1, barrel_x2, barrel_y2 = self.canvas.coords(self.id)
+            mario_x1, mario_y1, mario_x2, mario_y2 = self.canvas.coords(mario.id)
+            if ((mario_x1 < barrel_x2) and (mario_y1 < barrel_y2) and (mario_x2 > barrel_x1) and (mario_y2 > barrel_y1)):
+                constants.lifes -= 1
+                if constants.lifes == 0:
+                    constants.lose = True
+
+
+            
+
+
             if (len(paddle_list) != menos_i) and (barrel_y2 >= paddle_list[i-1].y1):
-                i = i - 1
-            self.canvas.after(delta_time, self.move_barrel, paddle_list, i)
+                i = i - 1 # Actualizo el paddle en el cual me encuentro
+
+            self.canvas.after(delta_time, self.move_barrel, paddle_list, i, mario)
         
-
-
-
-
-        
-        
-
-
-
 
 class Mario:
     def __init__(self, game_canvas, escalera_list, paddle_list, color, x1 = 100, y1 = 600, x2 = 140, y2 = 640):
@@ -231,11 +233,6 @@ class Mario:
         else:
             self.canvas.after(30, self.jump, step + 1, going_up)
      
-
-
-
-
-
         
 
 
